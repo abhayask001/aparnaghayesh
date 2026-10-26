@@ -454,7 +454,7 @@ if(p&&p.then){p.then(go).catch(function(){b.classList.add('gate')})}})();
       back.style.backgroundImage='url("'+list[i]+'")';
       back.classList.add('on');front.classList.remove('on');
       var t=front;front=back;back=t;
-    },2000);
+    },5000);
   }
   function load(src,ok,fail){var im=new Image();im.onload=ok;im.onerror=fail;im.src=src}
   function probe(){
