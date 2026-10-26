@@ -15,7 +15,7 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:#fff url("asset/background.jpg") center/cover fixed no-repeat;color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;text-align:center}
+body{margin:0;background:#fff url("assets/background.jpg") center/cover fixed no-repeat;color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;text-align:center}
 .wrap{max-width:480px;margin:0 auto;padding:32px 20px 48px}
 .card{background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:20px;padding:40px 24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
 .small{letter-spacing:.3em;text-transform:uppercase;font-size:12px;color:var(--soft)}
@@ -243,10 +243,14 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
 .vmwrap{position:relative;width:100%;max-width:560px;animation:in .45s cubic-bezier(.2,1.2,.3,1)}
 .vmwrap video{display:block;width:100%;max-height:78vh;max-height:78dvh;background:#000;border:3px solid #e11d2e;border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.15),0 0 28px rgba(225,29,46,.55),0 20px 60px rgba(0,0,0,.6)}
 .vx{position:absolute;top:-14px;right:-6px;width:34px;height:34px;border-radius:50%;border:2px solid #e11d2e;background:#fff;color:#e11d2e;font-size:22px;line-height:1;cursor:pointer;z-index:2;padding:0}
+/* Music tries to autoplay first; if the browser blocks sound, show Tap to open */
+body:not(.go) .splash{animation-play-state:paused}
+body:not(.gate) .tap{animation:none;opacity:0}
+body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
 </style>
 </head>
-<body class="go">
-<div class="splash" aria-hidden="true"><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div></div>
+<body>
+<div class="splash" role="button" aria-label="Tap to open"><div class="om-row"><img class="gan" alt="" src="assets/ganesha.png"><i class="bar"></i><span>ॐ</span></div><div class="tap">Tap to open</div></div>
 <div class="wrap"><div class="card">
   <div class="small">We solicit your esteemed presence with your family on the auspicious occasion of the wedding of our daughter</div>
   <div class="couple">
@@ -281,13 +285,13 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
       <div class="vtrack" id="vtrack">
         <div class="vslide">
           <!-- VIDEO 1: change src to your video file (and poster to its cover picture) -->
-          <video playsinline preload="metadata" poster="asset/poster1.jpg" src="asset/video1.mp4"></video>
+          <video playsinline preload="metadata" poster="assets/poster1.jpg" src="assets/video1.mp4"></video>
           <button class="vplay" aria-label="Play video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
           <div class="vph"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Video 1 coming soon</span></div>
         </div>
         <div class="vslide">
           <!-- VIDEO 2: change src to your video file (and poster to its cover picture) -->
-          <video playsinline preload="metadata" poster="asset/poster2.jpg" src="asset/video2.mp4"></video>
+          <video playsinline preload="metadata" poster="assets/poster2.jpg" src="assets/video2.mp4"></video>
           <button class="vplay" aria-label="Play video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
           <div class="vph"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Video 2 coming soon</span></div>
         </div>
@@ -296,6 +300,7 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
       <button class="vnav next" id="vnext" aria-label="Next video"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
     <div class="vdots" id="vdots"><i class="on"></i><i></i></div>
+    <div class="vswipe">Swipe to see the next video</div>
   </div>
 </section>
 
@@ -312,13 +317,13 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
   </div>
 </div>
 
-<audio id="bgm" loop preload="auto" src="asset/music.mp3"></audio>
+<audio id="bgm" loop preload="auto" src="assets/music.mp3"></audio>
 <script>
 function avatar(bg,fg){return 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="'+bg+'"/><circle cx="100" cy="78" r="38" fill="'+fg+'"/><path d="M28 200c0-46 32-72 72-72s72 26 72 72z" fill="'+fg+'"/></svg>')}
 // Replace the photo values with your real image data/URLs when you have them
 var P={
-  groom:{n:'Er.Ghayesh N',r:'The Groom',img:'asset/groom.jpg'},
-  bride:{n:'Dr.Aparna S.K',r:'The Bride',img:'asset/bride.jpg'}
+  groom:{n:'Er.Ghayesh N',r:'The Groom',img:'assets/groom.jpg'},
+  bride:{n:'Dr.Aparna S.K',r:'The Bride',img:'assets/bride.jpg'}
 };
 var m=document.getElementById('m');
 document.querySelectorAll('.name').forEach(function(b){b.onclick=function(){
@@ -341,7 +346,6 @@ function rmUnlock(){['click','touchend','pointerup','keydown'].forEach(function(
 bgm.addEventListener('playing',function(){showSnd();rmUnlock()});
 ['click','touchend','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,unlock)});
 document.addEventListener('visibilitychange',function(){if(document.hidden&&!bgm.paused){bgm.pause();bgm.dataset.resume=1}else if(!document.hidden&&bgm.dataset.resume){bgm.dataset.resume='';startBgm()}});
-startBgm();
 function go(){document.body.classList.add('go')}
 bgm.addEventListener('playing',go);
 function goFull(){var e=document.documentElement,f=e.requestFullscreen||e.webkitRequestFullscreen||e.msRequestFullscreen;if(f){try{var r=f.call(e,{navigationUI:'hide'});if(r&&r.catch)r.catch(function(){})}catch(x){}}}
@@ -378,6 +382,11 @@ pv.addEventListener('play',function(){if(!bgm.paused){bgmWas=true;bgm.pause()}})
 var backPv=function(){if(bgmWas&&!anyPlaying()){bgmWas=false;startBgm()}};
 pv.addEventListener('pause',backPv);pv.addEventListener('ended',backPv);
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting||e.intersectionRatio<.25){vids.forEach(function(v){if(!v.paused)v.pause()});if(vm.classList.contains('open'))closeV()}})},{threshold:[0,.25,.5]}).observe(document.querySelector('.vcar'))}
+var sp=document.querySelector('.splash');
+sp.addEventListener('click',function(){startBgm();goFull();go()});
+(function(){bgm.volume=.8;var b=document.body,p=bgm.play();
+setTimeout(function(){if(!b.classList.contains('go'))b.classList.add('gate')},600);
+if(p&&p.then){p.then(go).catch(function(){b.classList.add('gate')})}})();
 </script>
 </body>
 </html>
