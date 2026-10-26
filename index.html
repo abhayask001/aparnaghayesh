@@ -15,7 +15,7 @@ box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:en
 
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
-body{margin:0;background:#fff url("asset/background.jpg") center/cover fixed no-repeat;color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;text-align:center}
+body{margin:0;background:#fff url("assets/background.jpg") center/cover fixed no-repeat;color:var(--ink);font-family:Jost,system-ui,sans-serif;font-weight:300;text-align:center}
 .wrap{max-width:480px;margin:0 auto;padding:32px 20px 48px}
 .card{background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);border:1px solid var(--line);border-radius:20px;padding:40px 24px;box-shadow:0 10px 30px rgba(0,0,0,.08)}
 .small{letter-spacing:.3em;text-transform:uppercase;font-size:12px;color:var(--soft)}
@@ -247,10 +247,20 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
 body:not(.go) .splash{animation-play-state:paused}
 body:not(.gate) .tap{animation:none;opacity:0}
 body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
+/* COUNTDOWN + BUTTONS */
+.cdw{display:flex;justify-content:center;margin:16px 0 4px}
+.cdw div{flex:0 0 auto;min-width:54px;padding:2px 10px;border-left:1px solid rgba(230,194,122,.35)}
+.cdw div:first-child{border-left:0}
+.cdw b{display:block;font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(30px,9vw,40px);line-height:1;color:#fbf1dc}
+.cdw span{display:block;font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#e6c27a;margin-top:8px}
+.cbtns{display:grid;gap:12px;margin-top:24px}
+.cbtn{display:block;padding:14px 16px;border-radius:10px;text-decoration:none;text-align:center;font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:13px;letter-spacing:.24em;text-transform:uppercase;border:1px solid #e6c27a;color:#fbf1dc;transition:transform .12s ease}
+.cbtn.f{background:linear-gradient(180deg,#f6e7c4,#e6c27a);color:#4a1424;border-color:#fff3d6;box-shadow:0 3px 0 #9a7330,0 8px 14px rgba(0,0,0,.35)}
+.cbtn:active{transform:translateY(2px)}
 </style>
 </head>
 <body>
-<div class="splash" role="button" aria-label="Tap to open"><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div><div class="tap">Tap to open</div></div>
+<div class="splash" role="button" aria-label="Tap to open"><div class="om-row"><img class="gan" alt="" src="assets/ganesha.png"><i class="bar"></i><span>ॐ</span></div><div class="tap">Tap to open</div></div>
 <div class="wrap"><div class="card">
   <div class="small">We solicit your esteemed presence with your family on the auspicious occasion of the wedding of our daughter</div>
   <div class="couple">
@@ -276,6 +286,18 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
 </div>
 <button class="down" id="down" aria-label="Scroll down"><span>Scroll</span><svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
 </div>
+<section class="vsec" id="count">
+  <div class="vcard reveal">
+    <div class="small">Counting down</div>
+    <h2 class="vtitle">Until we say &ldquo;I do&rdquo;</h2>
+    <div class="divider"></div>
+    <div class="cdw" id="cdw" aria-live="polite"><div><b id="cdD">&ndash;</b><span>Days</span></div><div><b id="cdH">&ndash;</b><span>Hours</span></div><div><b id="cdM">&ndash;</b><span>Mins</span></div><div><b id="cdS">&ndash;</b><span>Secs</span></div></div>
+    <div class="cbtns">
+      <a class="cbtn f" target="_blank" rel="noopener" href="https://www.google.com/maps/place/Nandavanam+auditorium/@8.3337483,77.2660454,829m/data=!3m2!1e3!4b1!4m6!3m5!1s0x3b0454398d962429:0x8d05d7d2f4b34c96!8m2!3d8.3337483!4d77.2686203">Get Directions</a>
+      <a class="cbtn" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Wedding%20of%20Ghayesh%20%26%20Aparna&amp;dates=20261129T040000Z/20261129T070000Z&amp;location=Nandavanam%20Auditorium%2C%20Thiruvattar&amp;details=Sweekaranam%209%3A30%20AM.%20Muhurtham%20between%2011%3A00%20AM%20and%2012%3A00%20PM.">Add to Calendar</a>
+    </div>
+  </div>
+</section>
 <section class="vsec" id="video">
   <div class="vcard reveal">
     <div class="small">Our Moments</div>
@@ -285,13 +307,13 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
       <div class="vtrack" id="vtrack">
         <div class="vslide">
           <!-- VIDEO 1: change src to your video file (and poster to its cover picture) -->
-          <video playsinline preload="metadata" poster="asset/poster1.jpg" src="asset/video1.mp4"></video>
+          <video playsinline preload="metadata" poster="assets/poster1.jpg" src="assets/video1.mp4"></video>
           <button class="vplay" aria-label="Play video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
           <div class="vph"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Video 1 coming soon</span></div>
         </div>
         <div class="vslide">
           <!-- VIDEO 2: change src to your video file (and poster to its cover picture) -->
-          <video playsinline preload="metadata" poster="asset/poster2.jpg" src="asset/video2.mp4"></video>
+          <video playsinline preload="metadata" poster="assets/poster2.jpg" src="assets/video2.mp4"></video>
           <button class="vplay" aria-label="Play video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
           <div class="vph"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Video 2 coming soon</span></div>
         </div>
@@ -317,13 +339,13 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
   </div>
 </div>
 
-<audio id="bgm" loop preload="auto" src="asset/music.mp3"></audio>
+<audio id="bgm" loop preload="auto" src="assets/music.mp3"></audio>
 <script>
 function avatar(bg,fg){return 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="'+bg+'"/><circle cx="100" cy="78" r="38" fill="'+fg+'"/><path d="M28 200c0-46 32-72 72-72s72 26 72 72z" fill="'+fg+'"/></svg>')}
 // Replace the photo values with your real image data/URLs when you have them
 var P={
-  groom:{n:'Er.Ghayesh N',r:'The Groom',img:'asset/groom.jpg'},
-  bride:{n:'Dr.Aparna S.K',r:'The Bride',img:'asset/bride.jpg'}
+  groom:{n:'Er.Ghayesh N',r:'The Groom',img:'assets/groom.jpg'},
+  bride:{n:'Dr.Aparna S.K',r:'The Bride',img:'assets/bride.jpg'}
 };
 var m=document.getElementById('m');
 document.querySelectorAll('.name').forEach(function(b){b.onclick=function(){
@@ -368,7 +390,7 @@ function vGo(i){vt.scrollTo({left:i*vt.clientWidth,behavior:'smooth'})}
 function vUpd(){var i=Math.max(0,Math.min(dots.length-1,vIdx()));dots.forEach(function(d,k){d.className=k===i?'on':''});vp.hidden=i===0;vn.hidden=i===dots.length-1;vids.forEach(function(v,k){if(k!==i&&!v.paused)v.pause()})}
 vt.addEventListener('scroll',function(){clearTimeout(vt._t);vt._t=setTimeout(vUpd,80)});
 vp.onclick=function(){vGo(vIdx()-1)};vn.onclick=function(){vGo(vIdx()+1)};vUpd();
-document.getElementById('down').onclick=function(){document.getElementById('video').scrollIntoView({behavior:'smooth'})};
+document.getElementById('down').onclick=function(){document.getElementById('count').scrollIntoView({behavior:'smooth'})};
 var rv=document.querySelectorAll('.reveal');
 if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.2});rv.forEach(function(el){io.observe(el)})}else{rv.forEach(function(el){el.classList.add('in')})}
 var pv=document.getElementById('pv'),vm=document.getElementById('vmodal');
@@ -387,6 +409,12 @@ sp.addEventListener('click',function(){startBgm();goFull();go()});
 (function(){bgm.volume=.8;var b=document.body,p=bgm.play();
 setTimeout(function(){if(!b.classList.contains('go'))b.classList.add('gate')},600);
 if(p&&p.then){p.then(go).catch(function(){b.classList.add('gate')})}})();
+var CT=new Date('2026-11-29T11:00:00+05:30').getTime();
+function p2(n){return n<10?'0'+n:''+n}
+function cdTick(){var s=Math.floor(Math.max(0,CT-Date.now())/1000);
+document.getElementById('cdD').textContent=Math.floor(s/86400);document.getElementById('cdH').textContent=p2(Math.floor(s%86400/3600));
+document.getElementById('cdM').textContent=p2(Math.floor(s%3600/60));document.getElementById('cdS').textContent=p2(s%60)}
+cdTick();setInterval(cdTick,1000);
 </script>
 </body>
 </html>
