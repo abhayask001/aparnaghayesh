@@ -260,6 +260,21 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
 .dir{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:11px 22px;border-radius:999px;text-decoration:none;font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:#5a1426;background:linear-gradient(180deg,#f6e7c4,#e6c27a);border:1px solid #fff3d6;box-shadow:0 3px 0 #9a7330,0 8px 14px rgba(0,0,0,.4);transition:transform .12s ease,box-shadow .12s ease}
 .dir svg{width:18px;height:18px;fill:currentColor}
 .dir:active{transform:translateY(3px);box-shadow:0 0 0 #9a7330,0 3px 6px rgba(0,0,0,.4)}
+
+/* TIGHTER COUNTDOWN + VIDEO LAYOUT */
+.vsec{min-height:0;min-height:auto;padding:12px 14px 16px;align-items:flex-start}
+#count{padding-top:10px;padding-bottom:8px}
+#video{padding-top:8px;padding-bottom:28px}
+.vcard{padding:18px 14px 16px}
+#count .divider{margin:8px auto}
+#count .cdwhere{margin:8px 0 2px}
+#count .dir{margin-top:7px;padding:9px 18px}
+#video .vtitle{margin:4px 0 0}
+#video .divider{margin:10px auto}
+.vdots{margin-top:8px}
+.vswipe{margin-top:4px}
+@media(max-height:700px){.vsec{padding-top:8px;padding-bottom:10px}.vcard{padding:14px 12px 12px}#count .cdbox{padding:8px 3px 6px}}
+
 </style>
 </head>
 <body>
