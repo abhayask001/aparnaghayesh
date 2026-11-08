@@ -278,7 +278,7 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
 </style>
 </head>
 <body>
-<div class="splash" role="button" aria-label="Tap to open"><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div><div class="tap">Tap to open</div></div>
+<div class="splash" aria-hidden="true"><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div></div>
 <div class="wrap"><div class="card">
   <div class="small">We solicit your esteemed presence with your family on the auspicious occasion of the wedding of our daughter</div>
   <div class="couple">
@@ -435,9 +435,10 @@ pv.addEventListener('pause',backPv);pv.addEventListener('ended',backPv);
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting||e.intersectionRatio<.25){vids.forEach(function(v){if(!v.paused)v.pause()});if(vm.classList.contains('open'))closeV()}})},{threshold:[0,.25,.5]}).observe(document.querySelector('.vcar'))}
 var sp=document.querySelector('.splash');
 sp.addEventListener('click',function(){startBgm();goFull();go()});
-(function(){bgm.volume=.8;var b=document.body,p=bgm.play();
-setTimeout(function(){if(!b.classList.contains('go'))b.classList.add('gate')},600);
-if(p&&p.then){p.then(go).catch(function(){b.classList.add('gate')})}})();
+(function(){bgm.volume=.8;go();var p=bgm.play();if(p&&p.catch)p.catch(function(){});
+/* Try fullscreen right away; browsers usually need a gesture, so the existing first-tap handler covers that */
+goFull();
+})();
 /* COUNTDOWN (Muhurtham 11:00 AM IST, 29 Nov 2026) */
 (function(){
   var T=new Date('2026-11-29T11:00:00+05:30').getTime();
