@@ -275,19 +275,10 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
 .vswipe{margin-top:4px}
 @media(max-height:700px){.vsec{padding-top:8px;padding-bottom:10px}.vcard{padding:14px 12px 12px}#count .cdbox{padding:8px 3px 6px}}
 
-
-/* AUTO INTRO + MUTE BUTTON */
-.tap{display:none!important}
-.splash{cursor:default}
-.snd{display:flex;align-items:center;justify-content:center;padding:0;color:var(--gold);z-index:100;animation:none!important;opacity:1;-webkit-tap-highlight-color:transparent}
-.snd svg{width:22px;height:22px;fill:currentColor;display:block}
-.snd .off{display:none}
-.snd.muted .on{display:none}
-.snd.muted .off{display:block}
 </style>
 </head>
 <body>
-<div class="splash" ><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div></div>
+<div class="splash" role="button" aria-label="Tap to open"><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div><div class="tap">Tap to open</div></div>
 <div class="wrap"><div class="card">
   <div class="small">We solicit your esteemed presence with your family on the auspicious occasion of the wedding of our daughter</div>
   <div class="couple">
@@ -372,8 +363,8 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
   </div>
 </div>
 
-<button class="snd" id="snd" type="button" aria-label="Mute music" title="Mute / unmute music"><svg class="on" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg><svg class="off" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 8v2.2l2.5 2.5V12zM19 12a7 7 0 0 1-.9 3.4l1.5 1.5A9 9 0 0 0 21 12a9 9 0 0 0-7-8.8v2.1A7 7 0 0 1 19 12zM4.3 3 3 4.3 7.7 9H3v6h4l5 5v-6.7l4.3 4.3c-.7.5-1.4.9-2.3 1.2v2.1a9 9 0 0 0 3.7-1.9l2 2 1.3-1.3L4.3 3zM12 4 9.9 6.1 12 8.2V4z"/></svg></button>
 <audio id="bgm" loop preload="auto" src="asset/music.mp3"></audio>
+<button class="snd" id="snd" type="button" aria-label="Mute music" aria-pressed="false" title="Mute music">🔊</button>
 <script>
 function avatar(bg,fg){return 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="'+bg+'"/><circle cx="100" cy="78" r="38" fill="'+fg+'"/><path d="M28 200c0-46 32-72 72-72s72 26 72 72z" fill="'+fg+'"/></svg>')}
 // Replace the photo values with your real image data/URLs when you have them
@@ -392,6 +383,10 @@ m.onclick=function(e){if(e.target===m||e.target.className==='x')close()};
 document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
 var bgm=document.getElementById('bgm');
 function showSnd(){}
+var sndBtn=document.getElementById('snd');
+function updSnd(){var m=bgm.muted;sndBtn.textContent=m?'🔇':'🔊';sndBtn.setAttribute('aria-pressed',m?'true':'false');var t=m?'Unmute music':'Mute music';sndBtn.setAttribute('aria-label',t);sndBtn.title=t}
+bgm.muted=false;updSnd();
+sndBtn.addEventListener('click',function(e){e.stopPropagation();bgm.muted=!bgm.muted;updSnd();if(bgm.paused&&!bgm.muted)startBgm()});
 function startBgm(){bgm.volume=.8;var p=bgm.play();if(p&&p.then){p.then(showSnd).catch(function(){})}}
 function unlock(e){
   
@@ -441,34 +436,8 @@ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.fo
 var sp=document.querySelector('.splash');
 sp.addEventListener('click',function(){startBgm();goFull();go()});
 (function(){bgm.volume=.8;var b=document.body,p=bgm.play();
-go();
-var snd=document.getElementById('snd');
-function setBtn(){snd.classList.toggle('muted',bgm.muted);snd.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music')}
-window.autoMuted=false;
-function fallback(){ /* browser blocked sound: play silently now, switch sound on at first touch */
-  /* sound blocked by browser: stay unmuted and start music on the first touch */
-  bgm.muted=false;window.autoMuted=false;setBtn();
-}
-['pointerdown','mousedown','touchend','click','keydown'].forEach(function(ev){document.addEventListener(ev,function st(e){if(!bgm.paused||(e&&e.target&&e.target.closest&&e.target.closest('#snd')))return;bgm.muted=false;window.autoMuted=false;setBtn();startBgm()},true)});
-function attempt(){
-  if(!bgm.paused&&!bgm.muted)return;
-  bgm.muted=false;window.autoMuted=false;setBtn();
-  var r=bgm.play();
-  if(r&&r.catch)r.catch(fallback);
-}
-if(p&&p.catch)p.catch(fallback);
-['pageshow','load'].forEach(function(ev){window.addEventListener(ev,function(){if(bgm.paused)attempt()})});
-bgm.addEventListener('canplay',function(){if(bgm.paused)attempt()});
-function sound(){
-  if(!window.autoMuted)return;
-  window.autoMuted=false;bgm.muted=false;setBtn();
-  if(bgm.paused)startBgm();
-  ['click','touchend','pointerup','keydown'].forEach(function(ev){document.removeEventListener(ev,sound)});
-}
-['click','touchend','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,sound)});
-})();
-(function(){var b=document.getElementById('snd');b.addEventListener('click',function(e){e.stopPropagation();window.autoMuted=false;if(bgm.paused){bgm.muted=false}else{bgm.muted=!bgm.muted}b.classList.toggle('muted',bgm.muted);b.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music');if(bgm.paused)startBgm()});
-['touchend','pointerup'].forEach(function(ev){b.addEventListener(ev,function(e){e.stopPropagation()})})})();
+setTimeout(function(){if(!b.classList.contains('go'))b.classList.add('gate')},600);
+if(p&&p.then){p.then(go).catch(function(){b.classList.add('gate')})}})();
 /* COUNTDOWN (Muhurtham 11:00 AM IST, 29 Nov 2026) */
 (function(){
   var T=new Date('2026-11-29T11:00:00+05:30').getTime();
