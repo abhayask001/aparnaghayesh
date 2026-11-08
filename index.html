@@ -81,6 +81,14 @@ h4{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:44px
 @media (prefers-reduced-motion:reduce){.splash{display:none}.card,.card>*{animation:none}}
 .snd{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));width:44px;height:44px;border-radius:50%;background:#fff;border:1px solid var(--gold);font-size:20px;line-height:1;cursor:pointer;z-index:30;box-shadow:0 3px 0 #b8863b,0 8px 14px rgba(0,0,0,.2);animation:rise .9s ease 4.5s backwards}
 .snd:active{transform:translateY(3px);box-shadow:0 0 0 #b8863b,0 3px 6px rgba(0,0,0,.2)}
+/* TAP TO OPEN: intro waits for the first tap, which also starts the music */
+body:not(.go) .splash,body:not(.go) .splash span,body:not(.go) .card,body:not(.go) .card>*,body:not(.go) .snd{animation-play-state:paused}
+.splash{pointer-events:auto;cursor:pointer;-webkit-tap-highlight-color:transparent}
+body.go .splash{pointer-events:none}
+.tap{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:Jost,system-ui,sans-serif;font-weight:300;font-size:13px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);animation:tapPulse 2s ease-in-out infinite}
+body.go .tap{animation:none;opacity:0;transition:opacity .4s ease}
+@keyframes tapPulse{0%,100%{opacity:.35}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){.tap{display:none}}
 /* SINGLE SCREEN: everything fits one phone screen, no scrolling */
 html,body{height:100%;overflow:hidden}
 .wrap{height:100dvh;max-width:480px;display:flex;align-items:center;justify-content:center;padding:calc(10px + env(safe-area-inset-top,0px)) 14px calc(10px + env(safe-area-inset-bottom,0px))}
@@ -235,6 +243,10 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
 .vmwrap{position:relative;width:100%;max-width:560px;animation:in .45s cubic-bezier(.2,1.2,.3,1)}
 .vmwrap video{display:block;width:100%;max-height:78vh;max-height:78dvh;background:#000;border:3px solid #e11d2e;border-radius:14px;box-shadow:0 0 0 1px rgba(255,255,255,.15),0 0 28px rgba(225,29,46,.55),0 20px 60px rgba(0,0,0,.6)}
 .vx{position:absolute;top:-14px;right:-6px;width:34px;height:34px;border-radius:50%;border:2px solid #e11d2e;background:#fff;color:#e11d2e;font-size:22px;line-height:1;cursor:pointer;z-index:2;padding:0}
+/* Music tries to autoplay first; if the browser blocks sound, show Tap to open */
+body:not(.go) .splash{animation-play-state:paused}
+body:not(.gate) .tap{animation:none;opacity:0}
+body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
 /* BACKGROUND SLIDESHOW */
 .bgl{position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;transition:opacity 1s ease}
 .bgl.on{opacity:1}
@@ -266,7 +278,7 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
 </style>
 </head>
 <body>
-<div class="splash" aria-hidden="true"><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div></div>
+<div class="splash" role="button" aria-label="Tap to open"><div class="om-row"><img class="gan" alt="" src="asset/ganesha.png"><i class="bar"></i><span>ॐ</span></div><div class="tap">Tap to open</div></div>
 <div class="wrap"><div class="card">
   <div class="small">We solicit your esteemed presence with your family on the auspicious occasion of the wedding of our daughter</div>
   <div class="couple">
@@ -351,7 +363,6 @@ body::before{content:"";position:fixed;top:0;left:0;right:0;bottom:0;z-index:-1;
   </div>
 </div>
 
-<button class="snd" id="snd" type="button" aria-label="Mute background music" title="Mute background music">🔊</button>
 <audio id="bgm" loop preload="auto" src="asset/music.mp3"></audio>
 <script>
 function avatar(bg,fg){return 'data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="'+bg+'"/><circle cx="100" cy="78" r="38" fill="'+fg+'"/><path d="M28 200c0-46 32-72 72-72s72 26 72 72z" fill="'+fg+'"/></svg>')}
@@ -369,21 +380,25 @@ document.querySelectorAll('.name').forEach(function(b){b.onclick=function(){
 function close(){m.classList.remove('open')}
 m.onclick=function(e){if(e.target===m||e.target.className==='x')close()};
 document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
-var bgm=document.getElementById('bgm'),snd=document.getElementById('snd');
-function updateSnd(){snd.textContent=bgm.muted?'🔇':'🔊';snd.setAttribute('aria-label',bgm.muted?'Unmute background music':'Mute background music');snd.title=bgm.muted?'Unmute background music':'Mute background music'}
-function startBgm(){bgm.volume=.8;var p=bgm.play();if(p&&p.catch)p.catch(function(){})}
-snd.addEventListener('click',function(){if(bgm.paused){bgm.muted=false;startBgm()}else{bgm.muted=!bgm.muted}updateSnd()});
-bgm.addEventListener('volumechange',updateSnd);
-function unlock(){if(bgm.paused)startBgm();rmUnlock()}
+var bgm=document.getElementById('bgm');
+function showSnd(){}
+function startBgm(){bgm.volume=.8;var p=bgm.play();if(p&&p.then){p.then(showSnd).catch(function(){})}}
+function unlock(e){
+  
+  if(!bgm.paused){rmUnlock();return}
+  startBgm();
+}
 function rmUnlock(){['click','touchend','pointerup','keydown'].forEach(function(ev){document.removeEventListener(ev,unlock)})}
+bgm.addEventListener('playing',function(){showSnd();rmUnlock()});
 ['click','touchend','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,unlock)});
-updateSnd();
 document.addEventListener('visibilitychange',function(){if(document.hidden&&!bgm.paused){bgm.pause();bgm.dataset.resume=1}else if(!document.hidden&&bgm.dataset.resume){bgm.dataset.resume='';startBgm()}});
+function go(){document.body.classList.add('go')}
+bgm.addEventListener('playing',go);
 function goFull(){var e=document.documentElement,f=e.requestFullscreen||e.webkitRequestFullscreen||e.msRequestFullscreen;if(f){try{var r=f.call(e,{navigationUI:'hide'});if(r&&r.catch)r.catch(function(){})}catch(x){}}}
 document.addEventListener('keydown',go);
 function fitCard(){var c=document.querySelector('.card');c.style.zoom=1;var r=c.clientHeight/c.scrollHeight;if(r<1)c.style.zoom=(r*.97).toFixed(3)}
 window.addEventListener('resize',fitCard);window.addEventListener('load',fitCard);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fitCard);
-function firstGesture(e){if(e&&e.target&&e.target.closest&&e.target.closest('.vcar,.down,.vmodal,.snd'))return;goFull();['touchend','click','pointerup','keydown'].forEach(function(ev){document.removeEventListener(ev,firstGesture)})}
+function firstGesture(e){if(e&&e.target&&e.target.closest&&e.target.closest('.vcar,.down,.vmodal'))return;goFull();['touchend','click','pointerup','keydown'].forEach(function(ev){document.removeEventListener(ev,firstGesture)})}
 ['touchend','click','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,firstGesture)});
 var bgmWas=false,vids=[].slice.call(document.querySelectorAll('.vslide video'));
 function anyPlaying(){return vids.concat([pv]).some(function(v){return !v.paused&&!v.ended})}
@@ -413,7 +428,11 @@ pv.addEventListener('play',function(){if(!bgm.paused){bgmWas=true;bgm.pause()}})
 var backPv=function(){if(bgmWas&&!anyPlaying()){bgmWas=false;startBgm()}};
 pv.addEventListener('pause',backPv);pv.addEventListener('ended',backPv);
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting||e.intersectionRatio<.25){vids.forEach(function(v){if(!v.paused)v.pause()});if(vm.classList.contains('open'))closeV()}})},{threshold:[0,.25,.5]}).observe(document.querySelector('.vcar'))}
-(function(){bgm.volume=.8;startBgm()})();
+var sp=document.querySelector('.splash');
+sp.addEventListener('click',function(){startBgm();goFull();go()});
+(function(){bgm.volume=.8;var b=document.body,p=bgm.play();
+setTimeout(function(){if(!b.classList.contains('go'))b.classList.add('gate')},600);
+if(p&&p.then){p.then(go).catch(function(){b.classList.add('gate')})}})();
 /* COUNTDOWN (Muhurtham 11:00 AM IST, 29 Nov 2026) */
 (function(){
   var T=new Date('2026-11-29T11:00:00+05:30').getTime();
