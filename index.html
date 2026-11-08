@@ -275,6 +275,32 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
 .vswipe{margin-top:4px}
 @media(max-height:700px){.vsec{padding-top:8px;padding-bottom:10px}.vcard{padding:14px 12px 12px}#count .cdbox{padding:8px 3px 6px}}
 
+
+/* ===== LUXURY ADD-ONS: gold foil, scroll-in, calendar, petals ===== */
+/* scroll-in: each section's parts rise in one after another */
+.reveal>*{opacity:0;transform:translateY(18px);transition:opacity .8s ease,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in>*{opacity:1;transform:none}
+.reveal>*:nth-child(1){transition-delay:.15s}.reveal>*:nth-child(2){transition-delay:.3s}.reveal>*:nth-child(3){transition-delay:.45s}
+.reveal>*:nth-child(4){transition-delay:.6s}.reveal>*:nth-child(5){transition-delay:.75s}.reveal>*:nth-child(6){transition-delay:.9s}
+.reveal>*:nth-child(7){transition-delay:1.05s}.reveal>*:nth-child(8){transition-delay:1.2s}
+.reveal>.divider{transform:scaleX(0);opacity:1}
+.reveal.in>.divider{transform:none}
+.reveal .cdbox{opacity:0;transform:translateY(14px) scale(.9);transition:opacity .7s ease,transform .7s cubic-bezier(.2,1.1,.3,1)}
+.reveal.in .cdbox{opacity:1;transform:none}
+.reveal.in .cdbox:nth-child(1){transition-delay:.5s}.reveal.in .cdbox:nth-child(2){transition-delay:.65s}
+.reveal.in .cdbox:nth-child(3){transition-delay:.8s}.reveal.in .cdbox:nth-child(4){transition-delay:.95s}
+/* calendar + directions buttons */
+.acts{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:10px}
+#count .acts .dir,.acts .dir{margin-top:0}
+button.dir{-webkit-appearance:none;appearance:none;cursor:pointer}
+.gcal{display:inline-block;margin-top:12px;font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:13px;letter-spacing:.12em;color:#cdb98f;text-decoration:underline;text-underline-offset:3px}
+.gcal:hover{color:#f6e7c4}
+/* falling petals + gold sparkle */
+#petals{position:fixed;top:0;left:0;pointer-events:none;z-index:10}
+@media (prefers-reduced-motion:reduce){
+  .reveal,.reveal>*,.reveal .cdbox{transition:none;opacity:1;transform:none}
+  #petals{display:none}
+}
 </style>
 </head>
 <body>
@@ -317,10 +343,14 @@ body.gate:not(.go) .tap{animation:tapPulse 2s ease-in-out infinite}
     <div class="cdmsg" id="cdmsg"></div>
     <div class="divider"></div>
     <p class="cdwhere">Nandavanam Auditorium, Thiruvattar</p>
-    <a class="dir" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=8.3337483,77.2686203">
+    <div class="acts">
+      <a class="dir" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination=8.3337483,77.2686203">
       <svg viewBox="0 0 24 24"><path d="M21.7 11.3l-9-9a1 1 0 0 0-1.4 0l-9 9a1 1 0 0 0 0 1.4l9 9a1 1 0 0 0 1.4 0l9-9a1 1 0 0 0 0-1.4zM14 14v-3H10v3H8v-4a1 1 0 0 1 1-1h5V6l4 4-4 4z"/></svg>
       Get Directions
     </a>
+      <button class="dir" id="addcal" type="button"><svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11zM7 11h5v5H7z"/></svg>Add to Calendar</button>
+    </div>
+    <a class="gcal" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Ghayesh%20%26%20Aparna%20-%20Wedding%20%28Muhurtham%29&amp;dates=20261129T040000Z/20261129T073000Z&amp;details=Sweekaranam%209%3A30%20AM.%20Muhurtham%20between%2011%3A00%20AM%20%26%2012%3A00%20PM.&amp;location=Nandavanam%20Auditorium%2C%20Thiruvattar">or add to Google Calendar</a>
   </div>
 </section>
 <section class="vsec" id="video">
@@ -487,6 +517,68 @@ goFull();
     list=[];var left=CUSTOM.length;
     CUSTOM.forEach(function(f){load(f,function(){list.push(f);if(!--left)start()},function(){if(!--left)start()})});
   }else probe();
+})();
+
+/* ADD TO CALENDAR (.ics) */
+(function(){
+  var b=document.getElementById('addcal');if(!b)return;
+  function esc(t){return t.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n')}
+  b.addEventListener('click',function(){
+    var d=new Date(),z=function(n){return n<10?'0'+n:''+n};
+    var stamp=d.getUTCFullYear()+z(d.getUTCMonth()+1)+z(d.getUTCDate())+'T'+z(d.getUTCHours())+z(d.getUTCMinutes())+z(d.getUTCSeconds())+'Z';
+    var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Ghayesh and Aparna//Wedding//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',
+      'UID:wedding-20261129@ghayesh-aparna','DTSTAMP:'+stamp,'DTSTART:20261129T040000Z','DTEND:20261129T073000Z',
+      'SUMMARY:'+esc('Ghayesh & Aparna - Wedding (Muhurtham)'),'LOCATION:'+esc('Nandavanam Auditorium, Thiruvattar'),'GEO:8.3337483;77.2686203',
+      'DESCRIPTION:'+esc('Sweekaranam 9:30 AM\nMuhurtham between 11:00 AM & 12:00 PM\nWith best compliments from Abhaya Dev S.K'),
+      'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','DESCRIPTION:Wedding tomorrow','END:VALARM',
+      'BEGIN:VALARM','TRIGGER:-PT3H','ACTION:DISPLAY','DESCRIPTION:Wedding today','END:VALARM',
+      'END:VEVENT','END:VCALENDAR'];
+    var blob=new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'});
+    if(navigator.msSaveBlob){navigator.msSaveBlob(blob,'Ghayesh-Aparna-Wedding.ics');return}
+    var u=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=u;a.download='Ghayesh-Aparna-Wedding.ics';document.body.appendChild(a);a.click();
+    setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(u)},1500);
+  });
+})();
+/* FALLING PETALS + GOLD SPARKLE */
+(function(){
+  if(window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var c=document.createElement('canvas');c.id='petals';c.setAttribute('aria-hidden','true');document.body.appendChild(c);
+  var x=c.getContext('2d');if(!x)return;
+  var W=0,H=0,dpr=Math.min(window.devicePixelRatio||1,2),P=[],t0=0,vmo=document.getElementById('vmodal');
+  var cols=['255,246,224','248,226,176','236,170,178','255,255,255'];
+  function size(){W=window.innerWidth;H=window.innerHeight;c.width=Math.round(W*dpr);c.height=Math.round(H*dpr);c.style.width=W+'px';c.style.height=H+'px';x.setTransform(dpr,0,0,dpr,0,0)}
+  function mk(init){
+    var sp=Math.random()<.3;
+    return{sp:sp,x:Math.random()*W,y:init?Math.random()*H:-20-Math.random()*H*.3,
+      r:sp?1.2+Math.random()*1.8:5+Math.random()*6,vy:sp?.25+Math.random()*.35:.45+Math.random()*.7,vx:(Math.random()-.5)*.3,
+      sw:Math.random()*6.28,ss:.008+Math.random()*.016,sa:.25+Math.random()*.6,rot:Math.random()*6.28,rs:(Math.random()-.5)*.03,
+      fl:Math.random()*6.28,fs:.02+Math.random()*.03,col:sp?'246,214,140':cols[Math.floor(Math.random()*cols.length)],a:sp?.95:.5+Math.random()*.35}
+  }
+  function petal(p,al){
+    var r=p.r;x.save();x.translate(p.x,p.y);x.rotate(p.rot);x.scale(1,Math.abs(Math.cos(p.fl))*.8+.2);
+    x.fillStyle='rgba('+p.col+','+al+')';x.beginPath();x.moveTo(0,-r);
+    x.bezierCurveTo(r*.95,-r*.6,r*.8,r*.7,0,r);x.bezierCurveTo(-r*.8,r*.7,-r*.95,-r*.6,0,-r);x.fill();x.restore()
+  }
+  function spark(p,al){
+    var r=p.r*(.7+.3*Math.abs(Math.sin(p.fl))),a=al*(.35+.65*Math.abs(Math.sin(p.fl*1.3)));
+    x.save();x.translate(p.x,p.y);x.fillStyle='rgba(246,214,140,'+a*.18+')';x.beginPath();x.arc(0,0,r*3,0,6.283);x.fill();
+    x.fillStyle='rgba(255,243,208,'+a+')';x.beginPath();x.moveTo(0,-r*2.2);x.lineTo(r*.5,0);x.lineTo(0,r*2.2);x.lineTo(-r*.5,0);x.closePath();
+    x.moveTo(-r*2.2,0);x.lineTo(0,-r*.5);x.lineTo(r*2.2,0);x.lineTo(0,r*.5);x.closePath();x.fill();x.restore()
+  }
+  function frame(now){
+    requestAnimationFrame(frame);
+    if(vmo&&vmo.classList.contains('open'))return;
+    var f=Math.min(1,(now-t0)/2500);x.clearRect(0,0,W,H);
+    for(var i=0;i<P.length;i++){
+      var p=P[i];p.sw+=p.ss;p.x+=p.vx+Math.sin(p.sw)*p.sa;p.y+=p.vy;p.rot+=p.rs;p.fl+=p.fs;
+      if(p.y>H+24||p.x<-30||p.x>W+30){P[i]=p=mk(false);if(p.x<0||p.x>W)p.x=Math.random()*W}
+      if(p.sp)spark(p,p.a*f);else petal(p,p.a*f)
+    }
+  }
+  function start(){size();var n=Math.round(Math.max(14,Math.min(26,W/16)));for(var i=0;i<n;i++)P.push(mk(true));t0=performance.now();requestAnimationFrame(frame)}
+  window.addEventListener('resize',size);
+  setTimeout(start,4800);
 })();
 </script>
 </body>
