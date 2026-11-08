@@ -449,7 +449,7 @@ function fallback(){ /* browser blocked sound: play silently now, switch sound o
   /* sound blocked by browser: stay unmuted and start music on the first touch */
   bgm.muted=false;window.autoMuted=false;setBtn();
 }
-['click','touchend','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,function st(){if(bgm.paused){startBgm()}else{document.removeEventListener(ev,st)}})});
+['pointerdown','mousedown','touchend','click','keydown'].forEach(function(ev){document.addEventListener(ev,function st(e){if(!bgm.paused||(e&&e.target&&e.target.closest&&e.target.closest('#snd')))return;bgm.muted=false;window.autoMuted=false;setBtn();startBgm()},true)});
 function attempt(){
   if(!bgm.paused&&!bgm.muted)return;
   bgm.muted=false;window.autoMuted=false;setBtn();
@@ -467,7 +467,7 @@ function sound(){
 }
 ['click','touchend','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,sound)});
 })();
-(function(){var b=document.getElementById('snd');b.addEventListener('click',function(e){e.stopPropagation();window.autoMuted=false;bgm.muted=!bgm.muted;b.classList.toggle('muted',bgm.muted);b.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music');if(!bgm.muted&&bgm.paused)startBgm()});
+(function(){var b=document.getElementById('snd');b.addEventListener('click',function(e){e.stopPropagation();window.autoMuted=false;if(bgm.paused){bgm.muted=false}else{bgm.muted=!bgm.muted}b.classList.toggle('muted',bgm.muted);b.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music');if(bgm.paused)startBgm()});
 ['touchend','pointerup'].forEach(function(ev){b.addEventListener(ev,function(e){e.stopPropagation()})})})();
 /* COUNTDOWN (Muhurtham 11:00 AM IST, 29 Nov 2026) */
 (function(){
