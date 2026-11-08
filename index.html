@@ -441,8 +441,33 @@ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.fo
 var sp=document.querySelector('.splash');
 sp.addEventListener('click',function(){startBgm();goFull();go()});
 (function(){bgm.volume=.8;var b=document.body,p=bgm.play();
-go();if(p&&p.catch)p.catch(function(){});})();
-(function(){var b=document.getElementById('snd');b.addEventListener('click',function(e){e.stopPropagation();bgm.muted=!bgm.muted;b.classList.toggle('muted',bgm.muted);b.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music');if(!bgm.muted&&bgm.paused)startBgm()});
+go();
+var snd=document.getElementById('snd');
+function setBtn(){snd.classList.toggle('muted',bgm.muted);snd.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music')}
+window.autoMuted=false;
+function fallback(){ /* browser blocked sound: play silently now, switch sound on at first touch */
+  if(!bgm.paused&&!bgm.muted)return;
+  bgm.muted=true;window.autoMuted=true;setBtn();
+  var q=bgm.play();if(q&&q.catch)q.catch(function(){});
+}
+function attempt(){
+  if(!bgm.paused&&!bgm.muted)return;
+  bgm.muted=false;window.autoMuted=false;setBtn();
+  var r=bgm.play();
+  if(r&&r.catch)r.catch(fallback);
+}
+if(p&&p.catch)p.catch(fallback);
+['pageshow','load'].forEach(function(ev){window.addEventListener(ev,function(){if(bgm.paused)attempt()})});
+bgm.addEventListener('canplay',function(){if(bgm.paused)attempt()});
+function sound(){
+  if(!window.autoMuted)return;
+  window.autoMuted=false;bgm.muted=false;setBtn();
+  if(bgm.paused)startBgm();
+  ['click','touchend','pointerup','keydown'].forEach(function(ev){document.removeEventListener(ev,sound)});
+}
+['click','touchend','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,sound)});
+})();
+(function(){var b=document.getElementById('snd');b.addEventListener('click',function(e){e.stopPropagation();window.autoMuted=false;bgm.muted=!bgm.muted;b.classList.toggle('muted',bgm.muted);b.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music');if(!bgm.muted&&bgm.paused)startBgm()});
 ['touchend','pointerup'].forEach(function(ev){b.addEventListener(ev,function(e){e.stopPropagation()})})})();
 /* COUNTDOWN (Muhurtham 11:00 AM IST, 29 Nov 2026) */
 (function(){
