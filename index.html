@@ -342,6 +342,21 @@ body:not(.go) .down{animation-play-state:paused}
 .card>*:nth-child(1){animation-delay:2.94s}.card>*:nth-child(2){animation-delay:3.08s}.card>*:nth-child(3){animation-delay:3.22s}.card>*:nth-child(4){animation-delay:3.36s}.card>*:nth-child(5){animation-delay:3.50s}.card>*:nth-child(6){animation-delay:3.64s}.card>*:nth-child(7){animation-delay:3.78s}.card>*:nth-child(8){animation-delay:3.92s}.card>*:nth-child(9){animation-delay:4.06s}.card>*:nth-child(10){animation-delay:4.20s}.card>*:nth-child(11){animation-delay:4.34s}.card>*:nth-child(12){animation-delay:4.48s}.card>*:nth-child(13){animation-delay:4.62s}.card>*:nth-child(14){animation-delay:4.76s}.card>*:nth-child(15){animation-delay:4.90s}.card>*:nth-child(16){animation-delay:5.04s}
 .snd{animation-delay:4s}
 .down{animation-delay:4.3s,5.2s}
+
+/* DATE + TIMES */
+.when{display:flex;flex-direction:column;align-items:center;width:100%}
+.w-day{font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(11px,1.8vh,14px);letter-spacing:.5em;text-transform:uppercase;color:#e6c27a;padding-left:.5em}
+.w-date{display:flex;align-items:center;justify-content:center;gap:clamp(12px,4vw,22px);width:min(100%,310px);margin-top:clamp(4px,.9vh,9px);padding:clamp(3px,.8vh,8px) 0;border-top:1px solid rgba(230,194,122,.55);border-bottom:1px solid rgba(230,194,122,.55)}
+.w-mon,.w-yr{flex:1 1 0;font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(11px,1.9vh,15px);letter-spacing:.28em;text-transform:uppercase;color:#fbf1dc;white-space:nowrap}
+.w-mon{text-align:right;margin-right:-.28em}
+.w-yr{text-align:left}
+.w-num{font-family:PF,'Playfair Display',Georgia,serif;font-style:italic;font-weight:500;font-size:clamp(36px,6.6vh,60px);line-height:1;color:#e6c27a;text-shadow:0 2px 12px rgba(0,0,0,.45)}
+.times{display:flex;align-items:center;justify-content:center;width:100%;margin-top:clamp(8px,1.7vh,16px)}
+.t{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:clamp(1px,.4vh,3px);text-align:center}
+.t-sep{flex:0 0 1px;align-self:stretch;margin:0 clamp(6px,2vw,12px);background:linear-gradient(to bottom,transparent,#e6c27a,transparent)}
+.t-l{font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(10px,1.65vh,12.5px);letter-spacing:.26em;text-transform:uppercase;color:#e6c27a;padding-left:.26em}
+.t em{font-family:PF,'Playfair Display',Georgia,serif;font-style:italic;font-size:clamp(11px,1.7vh,14px);color:#cdb98f}
+.t-v{font-family:CGL,'Cormorant Garamond',Georgia,serif;font-weight:600;font-size:clamp(14px,min(4.2vw,2.6vh),21px);letter-spacing:.02em;white-space:nowrap;color:#fbf1dc}
 </style>
 </head>
 <body>
@@ -365,10 +380,15 @@ body:not(.go) .down{animation-play-state:paused}
     <div class="fam"><b>S/o.</b> Sri. A. Nethaji &amp; G. Ajitha<br><span>38/98-1, Pavizhamalli, North Street, Padmanabhapuram</span></div>
   </div>
   <div class="divider"></div>
-  <p class="detail">Sunday, 29 November 2026</p>
-  <p class="detail">Sweekaranam: 9.30 AM</p>
-  <p class="detail">MUHURTHAM BETWEEN</p>
-  <p class="detail">11:00 AM & 12:00 PM</p>
+  <div class="when">
+    <div class="w-day">Sunday</div>
+    <div class="w-date"><span class="w-mon">November</span><span class="w-num">29</span><span class="w-yr">2026</span></div>
+  </div>
+  <div class="times">
+    <div class="t"><span class="t-l">Sweekaranam</span><b class="t-v">9:30 AM</b></div>
+    <i class="t-sep"></i>
+    <div class="t"><span class="t-l">Muhurtham</span><em>between</em><b class="t-v">11:00 AM &amp; 12:00 PM</b></div>
+  </div>
   <div class="divider"></div>
   <p class="detail">Nandavanam Auditorium</p>
   <p class="note">Thiruvattar</p>
