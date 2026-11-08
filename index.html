@@ -446,10 +446,10 @@ var snd=document.getElementById('snd');
 function setBtn(){snd.classList.toggle('muted',bgm.muted);snd.setAttribute('aria-label',bgm.muted?'Unmute music':'Mute music')}
 window.autoMuted=false;
 function fallback(){ /* browser blocked sound: play silently now, switch sound on at first touch */
-  if(!bgm.paused&&!bgm.muted)return;
-  bgm.muted=true;window.autoMuted=true;setBtn();
-  var q=bgm.play();if(q&&q.catch)q.catch(function(){});
+  /* sound blocked by browser: stay unmuted and start music on the first touch */
+  bgm.muted=false;window.autoMuted=false;setBtn();
 }
+['click','touchend','pointerup','keydown'].forEach(function(ev){document.addEventListener(ev,function st(){if(bgm.paused){startBgm()}else{document.removeEventListener(ev,st)}})});
 function attempt(){
   if(!bgm.paused&&!bgm.muted)return;
   bgm.muted=false;window.autoMuted=false;setBtn();
