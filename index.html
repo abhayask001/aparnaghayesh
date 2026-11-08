@@ -333,6 +333,15 @@ body:not(.go) .down{animation-play-state:paused}
 .cv-seal::after{top:-8px;left:-8px;right:-8px;bottom:-8px}
 .cv-date{margin-top:26px;font-size:16px}
 .cv-tap{margin-top:26px}
+
+/* smaller degree text in names */
+.name .deg{font-size:.6em;letter-spacing:.04em}
+
+/* NO GAP: invitation fades in while the intro fades out */
+.card{animation-delay:2.6s}
+.card>*:nth-child(1){animation-delay:2.94s}.card>*:nth-child(2){animation-delay:3.08s}.card>*:nth-child(3){animation-delay:3.22s}.card>*:nth-child(4){animation-delay:3.36s}.card>*:nth-child(5){animation-delay:3.50s}.card>*:nth-child(6){animation-delay:3.64s}.card>*:nth-child(7){animation-delay:3.78s}.card>*:nth-child(8){animation-delay:3.92s}.card>*:nth-child(9){animation-delay:4.06s}.card>*:nth-child(10){animation-delay:4.20s}.card>*:nth-child(11){animation-delay:4.34s}.card>*:nth-child(12){animation-delay:4.48s}.card>*:nth-child(13){animation-delay:4.62s}.card>*:nth-child(14){animation-delay:4.76s}.card>*:nth-child(15){animation-delay:4.90s}.card>*:nth-child(16){animation-delay:5.04s}
+.snd{animation-delay:4s}
+.down{animation-delay:4.3s,5.2s}
 </style>
 </head>
 <body>
@@ -349,10 +358,10 @@ body:not(.go) .down{animation-play-state:paused}
 <div class="wrap"><div class="card">
   <div class="small">We solicit your esteemed presence with your family on the auspicious occasion of the wedding of our daughter</div>
   <div class="couple">
-    <button class="name" data-p="bride">Dr. Aparna. S.K, MBBS</button>
+    <button class="name" data-p="bride">Dr. Aparna. S.K, <span class="deg">MBBS</span></button>
     <div class="fam"><b>D/o:</b> Sri. K. Somar Nair &amp; Smt. S. Kumari Geetha<br><span>16/194A, Surabhi, Kankarai, Thiruvattar.</span></div>
     <span class="amp">&amp;</span>
-    <button class="name" data-p="groom">Er. Ghayesh. N, M.Tech</button>
+    <button class="name" data-p="groom">Er. Ghayesh. N, <span class="deg">M.Tech</span></button>
     <div class="fam"><b>S/o.</b> Sri. A. Nethaji &amp; G. Ajitha<br><span>38/98-1, Pavizhamalli, North Street, Padmanabhapuram</span></div>
   </div>
   <div class="divider"></div>
@@ -629,7 +638,7 @@ sp.addEventListener('click',function(){startBgm();goFull();go()});
   }
   function start(){size();var n=Math.round(Math.max(14,Math.min(26,W/16)));for(var i=0;i<n;i++)P.push(mk(true));t0=performance.now();requestAnimationFrame(frame)}
   window.addEventListener('resize',size);
-  window.startPetals=function(){setTimeout(start,4800)};
+  window.startPetals=function(){setTimeout(start,3000)};
 })();
 </script>
 </body>
