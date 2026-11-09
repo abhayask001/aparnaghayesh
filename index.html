@@ -457,33 +457,6 @@ video{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
     <a class="gcal" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&amp;text=Ghayesh%20%26%20Aparna%20-%20Wedding%20%28Muhurtham%29&amp;dates=20261129T040000Z/20261129T073000Z&amp;details=Sweekaranam%209%3A30%20AM.%20Muhurtham%20between%2011%3A00%20AM%20%26%2012%3A00%20PM.&amp;location=Nandavanam%20Auditorium%2C%20Thiruvattar">or add to Google Calendar</a>
   </div>
 </section>
-<section class="vsec" id="video">
-  <div class="vcard reveal">
-    <div class="small">Our Moments</div>
-    <h2 class="vtitle">A glimpse of our journey</h2>
-    <div class="divider"></div>
-    <div class="vcar">
-      <div class="vtrack" id="vtrack">
-        <div class="vslide">
-          <!-- VIDEO 1: change src to your video file (and poster to its cover picture) -->
-          <video controlslist="nodownload noplaybackrate noremoteplayback" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny" oncontextmenu="return false" playsinline preload="metadata" poster="asset/poster1.jpg" src="asset/video1.mp4"></video>
-          <button class="vplay" aria-label="Play video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <div class="vph"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Video 1 coming soon</span></div>
-        </div>
-        <div class="vslide">
-          <!-- VIDEO 2: change src to your video file (and poster to its cover picture) -->
-          <video controlslist="nodownload noplaybackrate noremoteplayback" disablepictureinpicture disableremoteplayback x-webkit-airplay="deny" oncontextmenu="return false" playsinline preload="metadata" poster="asset/poster2.jpg" src="asset/video2.mp4"></video>
-          <button class="vplay" aria-label="Play video"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
-          <div class="vph"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><span>Video 2 coming soon</span></div>
-        </div>
-      </div>
-      <button class="vnav prev" id="vprev" aria-label="Previous video" hidden><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="vnav next" id="vnext" aria-label="Next video"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-    </div>
-    <div class="vdots" id="vdots"><i class="on"></i><i></i></div>
-  </div>
-</section>
-
 <div class="modal" id="m" role="dialog" aria-modal="true">
   <div class="pop"><button class="x" aria-label="Close">×</button>
     <img id="pi" alt=""><h2 id="pn"></h2><div class="small" id="pr"></div>
@@ -549,11 +522,20 @@ var vt=document.getElementById('vtrack'),dots=[].slice.call(document.querySelect
 function vIdx(){return Math.round(vt.scrollLeft/vt.clientWidth)}
 function vGo(i){vt.scrollTo({left:i*vt.clientWidth,behavior:'smooth'})}
 function vUpd(){var i=Math.max(0,Math.min(dots.length-1,vIdx()));dots.forEach(function(d,k){d.className=k===i?'on':''});vp.hidden=i===0;vn.hidden=i===dots.length-1;vids.forEach(function(v,k){if(k!==i&&!v.paused)v.pause()})}
-vt.addEventListener('scroll',function(){clearTimeout(vt._t);vt._t=setTimeout(vUpd,80)});
-vp.onclick=function(){vGo(vIdx()-1)};vn.onclick=function(){vGo(vIdx()+1)};vUpd();
+if(vt){vt.addEventListener('scroll',function(){clearTimeout(vt._t);vt._t=setTimeout(vUpd,80)});
+vp.onclick=function(){vGo(vIdx()-1)};vn.onclick=function(){vGo(vIdx()+1)};vUpd()}
 document.getElementById('down').onclick=function(){document.getElementById('reception').scrollIntoView({behavior:'smooth'})};
+/* Scroll sections (reception, countdown, journey) stay hidden until the invitation has finished appearing, then rise in the same way */
 var rv=document.querySelectorAll('.reveal');
-if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.2});rv.forEach(function(el){io.observe(el)})}else{rv.forEach(function(el){el.classList.add('in')})}
+function startReveal(){
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.2});rv.forEach(function(el){io.observe(el)})}else{rv.forEach(function(el){el.classList.add('in')})}
+}
+(function(){
+  var started=false;
+  function after(){if(started)return;started=true;setTimeout(startReveal,6300)} /* invitation lines finish ~6.3s after go */
+  if(document.body.classList.contains('go'))after();
+  else new MutationObserver(function(m,o){if(document.body.classList.contains('go')){o.disconnect();after()}}).observe(document.body,{attributes:true,attributeFilter:['class']});
+})();
 var pv=document.getElementById('pv'),vm=document.getElementById('vmodal');
 function openV(i){var v=vids[i];if(!v||!v.getAttribute('src'))return;pv.poster=v.getAttribute('poster')||'';pv.src=v.getAttribute('src');vm.classList.add('open');document.documentElement.style.overflow='hidden';var r=pv.play();if(r&&r.catch)r.catch(function(){})}
 function closeV(){pv.pause();vm.classList.remove('open');document.documentElement.style.overflow='';pv.removeAttribute('src');pv.removeAttribute('poster');pv.load()}
@@ -564,7 +546,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape'&&vm.classLis
 pv.addEventListener('play',function(){if(!bgm.paused){bgmWas=true;bgm.pause()}});
 var backPv=function(){if(bgmWas&&!anyPlaying()){bgmWas=false;startBgm()}};
 pv.addEventListener('pause',backPv);pv.addEventListener('ended',backPv);
-if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting||e.intersectionRatio<.25){vids.forEach(function(v){if(!v.paused)v.pause()});if(vm.classList.contains('open'))closeV()}})},{threshold:[0,.25,.5]}).observe(document.querySelector('.vcar'))}
+if('IntersectionObserver' in window&&document.querySelector('.vcar')){new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting||e.intersectionRatio<.25){vids.forEach(function(v){if(!v.paused)v.pause()});if(vm.classList.contains('open'))closeV()}})},{threshold:[0,.25,.5]}).observe(document.querySelector('.vcar'))}
 var sp=document.querySelector('.splash');
 sp.addEventListener('click',function(){startBgm();goFull();go()});
 (function(){
