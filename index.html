@@ -622,17 +622,17 @@ sp.addEventListener('click',function(){startBgm();goFull();go()});
   b.addEventListener('click',function(){
     var d=new Date(),z=function(n){return n<10?'0'+n:''+n};
     var stamp=d.getUTCFullYear()+z(d.getUTCMonth()+1)+z(d.getUTCDate())+'T'+z(d.getUTCHours())+z(d.getUTCMinutes())+z(d.getUTCSeconds())+'Z';
-    var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Ghayesh and Aparna//Wedding//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',
-      'UID:wedding-20261129@ghayesh-aparna','DTSTAMP:'+stamp,'DTSTART:20261129T040000Z','DTEND:20261129T073000Z',
-      'SUMMARY:'+esc('Ghayesh & Aparna - Wedding (Muhurtham)'),'LOCATION:'+esc('Nandavanam Auditorium, Thiruvattar'),'GEO:8.3337483;77.2686203',
+    var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Aparna and Ghayesh//Wedding//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','BEGIN:VEVENT',
+      'UID:wedding-20261129@aparna-ghayesh','DTSTAMP:'+stamp,'DTSTART:20261129T040000Z','DTEND:20261129T073000Z',
+      'SUMMARY:'+esc('Aparna & Ghayesh - Wedding (Muhurtham)'),'LOCATION:'+esc('Nandavanam Auditorium, Thiruvattar'),'GEO:8.3337483;77.2686203',
       'DESCRIPTION:'+esc('Sweekaranam 9:30 AM\nMuhurtham between 11:00 AM & 12:00 PM\nWith best compliments from Abhaya Dev S.K'),
       'BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','DESCRIPTION:Wedding tomorrow','END:VALARM',
       'BEGIN:VALARM','TRIGGER:-PT3H','ACTION:DISPLAY','DESCRIPTION:Wedding today','END:VALARM',
       'END:VEVENT','END:VCALENDAR'];
     var blob=new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'});
-    if(navigator.msSaveBlob){navigator.msSaveBlob(blob,'Ghayesh-Aparna-Wedding.ics');return}
+    if(navigator.msSaveBlob){navigator.msSaveBlob(blob,'Aparna-Ghayesh-Wedding.ics');return}
     var u=URL.createObjectURL(blob),a=document.createElement('a');
-    a.href=u;a.download='Ghayesh-Aparna-Wedding.ics';document.body.appendChild(a);a.click();
+    a.href=u;a.download='Aparna-Ghayesh-Wedding.ics';document.body.appendChild(a);a.click();
     setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(u)},1500);
   });
 })();
